@@ -1,3 +1,4 @@
+import { FastifyLoggerInstance } from 'fastify';
 import { Transaction } from '../../../../domain/entities/transactions';
 import { TransactionTypeEnum } from '../../../../domain/enum/transaction-type.enum';
 import { ITransactionsRepository } from '../../../../domain/repositories/transactions.repository';
@@ -6,13 +7,18 @@ import { ResourceNotFoundError } from '../errors/resource-not-found-error';
 import { prisma } from '../index';
 
 export class TransactionsRepository implements ITransactionsRepository {
+  private readonly logger: FastifyLoggerInstance;
+
   async deposit(number: number, amount: number): Promise<Transaction> {
+    this.logger.info(`Initiating deposit: Account ${number}, Amount ${amount}`);
+
     const transaction = await prisma.$transaction(async (client) => {
       const account = await client.account.findUnique({
         where: { number },
       });
 
       if (!account) {
+        this.logger.error(`Account not found for number ${number}`);
         throw new ResourceNotFoundError();
       }
 
@@ -20,6 +26,8 @@ export class TransactionsRepository implements ITransactionsRepository {
         where: { number },
         data: { balance: { increment: amount } },
       });
+
+      this.logger.info(`Account ${number} balance incremented by ${amount}`);
 
       return await client.transaction.create({
         data: {
@@ -32,6 +40,10 @@ export class TransactionsRepository implements ITransactionsRepository {
       });
     });
 
+    this.logger.info(
+      `Deposit transaction completed with ID: ${transaction.id}`,
+    );
+
     return new Transaction({
       id: transaction.id,
       type: transaction.type as TransactionTypeEnum,
@@ -42,16 +54,22 @@ export class TransactionsRepository implements ITransactionsRepository {
   }
 
   async withdrawal(number: number, amount: number): Promise<Transaction> {
+    this.logger.info(
+      `Starting withdrawal for account ${number} with amount ${amount}`,
+    );
+
     const transaction = await prisma.$transaction(async (client) => {
       const account = await client.account.findUnique({
         where: { number },
       });
 
       if (!account) {
+        this.logger.error(`Account not found for number ${number}`);
         throw new ResourceNotFoundError();
       }
 
       if (account.balance < amount) {
+        this.logger.error(`Insufficient funds for account ${number}`);
         throw new InsuficientFundsError();
       }
 
@@ -59,6 +77,8 @@ export class TransactionsRepository implements ITransactionsRepository {
         where: { number },
         data: { balance: { decrement: amount } },
       });
+
+      this.logger.info(`Account ${number} balance decremented by ${amount}`);
 
       return await client.transaction.create({
         data: {
@@ -70,6 +90,10 @@ export class TransactionsRepository implements ITransactionsRepository {
         },
       });
     });
+
+    this.logger.info(
+      `Withdrawal transaction completed with ID: ${transaction.id}`,
+    );
 
     return new Transaction({
       id: transaction.id,
@@ -85,16 +109,22 @@ export class TransactionsRepository implements ITransactionsRepository {
     toAccount: number,
     amount: number,
   ): Promise<Transaction> {
+    this.logger.info(
+      `Starting transfer from account ${fromAccount} to ${toAccount} with amount ${amount}`,
+    );
+
     const transaction = await prisma.$transaction(async (client) => {
       const from = await client.account.findUnique({
         where: { number: fromAccount },
       });
 
       if (!from) {
+        this.logger.error(`Source account not found for number ${fromAccount}`);
         throw new ResourceNotFoundError();
       }
 
       if (from.balance < amount) {
+        this.logger.error(`Insufficient funds for account ${fromAccount}`);
         throw new InsuficientFundsError();
       }
 
@@ -103,6 +133,9 @@ export class TransactionsRepository implements ITransactionsRepository {
       });
 
       if (!to) {
+        this.logger.error(
+          `Destination account not found for number ${toAccount}`,
+        );
         throw new ResourceNotFoundError();
       }
 
@@ -111,10 +144,16 @@ export class TransactionsRepository implements ITransactionsRepository {
         data: { balance: { decrement: amount } },
       });
 
+      this.logger.info(
+        `Account ${fromAccount} balance decremented by ${amount}`,
+      );
+
       await client.account.update({
         where: { number: toAccount },
         data: { balance: { increment: amount } },
       });
+
+      this.logger.info(`Account ${toAccount} balance incremented by ${amount}`);
 
       return await client.transaction.create({
         data: {
@@ -126,6 +165,10 @@ export class TransactionsRepository implements ITransactionsRepository {
         },
       });
     });
+
+    this.logger.info(
+      `Transfer transaction completed with ID: ${transaction.id}`,
+    );
 
     return new Transaction({
       id: transaction.id,

@@ -2,7 +2,9 @@ import fastify from 'fastify';
 import { ZodError } from 'zod';
 import { accountsRoutes } from './application/controllers/routes';
 
-export const app = fastify();
+export const app = fastify({
+  logger: true,
+});
 
 app.register(accountsRoutes);
 

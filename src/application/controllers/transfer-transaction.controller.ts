@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { TransferTransactionService } from '../../domain/services/transfer-transaction.service';
 import { TransactionsRepository } from '../../infra/database/prisma/repositories/transactions.repository';
 
-export async function withdrawalTransaction(
+export async function transferTransaction(
   request: FastifyRequest,
   reply: FastifyReply,
 ) {
