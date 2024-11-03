@@ -20,15 +20,17 @@ model Account {
 }
 
 model Transaction {
-  id              String   @id @default(uuid())
-  type            String
-  amount          Float
+  id         String   @id @default(uuid())
+  type       String
+  amount     Float
+  from       Int?
+  to         Int?
+  created_at DateTime @default(now())
+
   from_account_id String?
   to_account_id   String?
-  created_at      DateTime @default(now())
-
-  from_account Account? @relation("AccountFrom", fields: [from_account_id], references: [id])
-  to_account   Account? @relation("AccountTo", fields: [to_account_id], references: [id])
+  from_account    Account? @relation("AccountFrom", fields: [from_account_id], references: [id])
+  to_account      Account? @relation("AccountTo", fields: [to_account_id], references: [id])
 
   @@map("transaction")
 }
