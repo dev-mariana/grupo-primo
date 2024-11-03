@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { RegisterAccountService } from '../../domain/services/register-account.service';
-import { AccountRepository } from '../../infra/database/prisma/repositories/account.repository';
+import { AccountsRepository } from '../../infra/database/prisma/repositories/accounts.repository';
 
 export async function registerAccount(
   request: FastifyRequest,
@@ -14,7 +14,7 @@ export async function registerAccount(
 
   const { number, balance } = registerAccountParams.parse(request.body);
 
-  const accountRepository = new AccountRepository();
+  const accountRepository = new AccountsRepository();
   const registerAccountService = new RegisterAccountService(accountRepository);
 
   const result = await registerAccountService.execute({ number, balance });

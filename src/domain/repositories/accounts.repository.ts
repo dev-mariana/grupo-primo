@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 import { Account } from '../entities/account';
 
-export interface IAccountRepository {
+export interface IAccountsRepository {
   register(account: Prisma.AccountCreateInput): Promise<Account>;
 }

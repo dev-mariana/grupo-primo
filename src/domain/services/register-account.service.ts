@@ -1,4 +1,4 @@
-import { AccountRepository } from '../../infra/database/prisma/repositories/account.repository';
+import { AccountsRepository } from '../../infra/database/prisma/repositories/accounts.repository';
 
 interface RegisterAccountRequest {
   number: number;
@@ -10,7 +10,7 @@ interface RegisterAccountResponse {
 }
 
 export class RegisterAccountService {
-  constructor(private readonly accountRepository: AccountRepository) {}
+  constructor(private readonly accountRepository: AccountsRepository) {}
 
   async execute(
     account: RegisterAccountRequest,
