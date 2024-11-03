@@ -9,7 +9,7 @@ export class Transaction {
 
   constructor(data: Transaction) {
     this.id = data.id;
-    this.type = data.type;
+    this.type = data.type as TransactionTypeEnum;
     this.from = data.from;
     this.to = data.to;
     this.amount = data.amount;
