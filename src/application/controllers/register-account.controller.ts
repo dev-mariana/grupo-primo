@@ -3,7 +3,10 @@ import { z } from 'zod';
 import { RegisterAccountService } from '../../domain/services/register-account.service';
 import { AccountRepository } from '../../infra/database/prisma/repositories/account.repository';
 
-export async function register(request: FastifyRequest, reply: FastifyReply) {
+export async function registerAccount(
+  request: FastifyRequest,
+  reply: FastifyReply,
+) {
   const registerAccountParams = z.object({
     number: z.number().int().positive(),
     balance: z.number().min(0),

@@ -1,10 +1,10 @@
 import fastify from 'fastify';
 import { ZodError } from 'zod';
-import { transactionsRoutes } from './application/controllers/routes';
+import { accountsRoutes } from './application/controllers/routes';
 
 export const app = fastify();
 
-app.register(transactionsRoutes);
+app.register(accountsRoutes);
 
 app.setErrorHandler((error, _, reply) => {
   if (error instanceof ZodError) {
