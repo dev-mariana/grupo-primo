@@ -66,7 +66,7 @@ export class TransactionsRepository implements ITransactionsRepository {
 
     const transaction = await prisma.$transaction(async (client) => {
       const account = await client.$queryRaw<Account>(
-        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${number} FOR UPDATE`,
+        Prisma.sql`SELECT * FROM "account" WHERE "number" = ${number} FOR UPDATE`,
       );
 
       if (!account) {
@@ -121,7 +121,7 @@ export class TransactionsRepository implements ITransactionsRepository {
 
     const transaction = await prisma.$transaction(async (client) => {
       const from = await client.$queryRaw<Account>(
-        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${fromAccount} FOR UPDATE`,
+        Prisma.sql`SELECT * FROM "account" WHERE "number" = ${fromAccount} FOR UPDATE`,
       );
 
       if (!from) {
@@ -135,7 +135,7 @@ export class TransactionsRepository implements ITransactionsRepository {
       }
 
       const to = await client.$queryRaw<Account>(
-        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${toAccount} FOR UPDATE`,
+        Prisma.sql`SELECT * FROM "account" WHERE "number" = ${toAccount} FOR UPDATE`,
       );
 
       if (!to) {
