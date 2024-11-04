@@ -31,40 +31,40 @@ Este projeto implementa um sistema básico de transações bancárias com funcio
 
 2. Acesse o diretório do projeto:
 
-```bash
-  cd grupo-primo
-```
+   ```bash
+   cd grupo-primo
+   ```
 
 3. Instale as dependências:
 
-```bash
-  npm install ou yarn install
-```
+   ```bash
+   npm install ou yarn install
+   ```
 
 4. Crie um arquivo .env na raiz do projeto e coloque as variáveis de ambiente:
 
-   DATABASE_URL="postgresql://usuario:senha@localhost:5432/nome_do_banco"
-   NODE_ENV="development"
-   PORT=3000
+   - DATABASE_URL="postgresql://usuario:senha@localhost:5432/nome_do_banco"
+   - NODE_ENV="development"
+   - PORT=3000
 
 ## Configuração do Banco de Dados
 
 1. Criar o banco de dados via Docker:
 
-```bash
-docker compose up -d
-```
+   ```bash
+   docker compose up -d
+   ```
 
 2. Rodar as migrations:
 
-```bash
-npx prisma migrate dev --name init
-```
+   ```bash
+   npx prisma migrate dev --name init
+   ```
 
 ## Executando o Projeto
 
 1. Iniciar o servidor:
 
-```bash
-npm run dev ou yarn install
-```
+   ```bash
+   npm run dev ou yarn install
+   ```
