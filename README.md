@@ -29,13 +29,17 @@ Este projeto implementa um sistema básico de transações bancárias com funcio
    git clone https://github.com/dev-mariana/grupo-primo.git
    ```
 
-2. ```bash
-   cd grupo-primo
-   ```
+2. Acesse o diretório do projeto:
 
-3. ```bash
-   npm install ou yarn install
-   ```
+```bash
+  cd grupo-primo
+```
+
+3. Instale as dependências:
+
+```bash
+  npm install ou yarn install
+```
 
 4. Crie um arquivo .env na raiz do projeto e coloque as variáveis de ambiente:
 
