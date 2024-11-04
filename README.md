@@ -69,7 +69,7 @@ Este projeto implementa um sistema básico de transações bancárias com funcio
    npm run dev ou yarn install
    ```
 
-## Testrando os Endpoints
+## Testando os Endpoints
 
 - Registrar conta:
 
