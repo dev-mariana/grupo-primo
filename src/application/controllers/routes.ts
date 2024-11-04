@@ -4,7 +4,7 @@ import { registerAccount } from './register-account.controller';
 import { transferTransaction } from './transfer-transaction.controller';
 import { withdrawalTransaction } from './withdrawal-transaction.controller';
 
-export async function accountsRoutes(app: FastifyInstance) {
+export async function appRoutes(app: FastifyInstance) {
   app.post('/accounts/register', registerAccount);
   app.post('/transactions/deposit', depositTransaction);
   app.post('/transactions/withdrawal', withdrawalTransaction);

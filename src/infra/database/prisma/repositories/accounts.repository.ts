@@ -8,6 +8,10 @@ import { prisma } from '../index';
 export class AccountsRepository implements IAccountsRepository {
   private readonly logger: FastifyLoggerInstance;
 
+  constructor(logger: FastifyLoggerInstance) {
+    this.logger = logger;
+  }
+
   async register(account: Prisma.AccountCreateInput): Promise<Account> {
     this.logger.info(
       `Attempting to register account with number: ${account.number}`,

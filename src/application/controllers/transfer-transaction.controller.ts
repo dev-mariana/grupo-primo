@@ -1,4 +1,4 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyLoggerInstance, FastifyReply, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 import { TransferTransactionService } from '../../domain/services/transfer-transaction.service';
 import { TransactionsRepository } from '../../infra/database/prisma/repositories/transactions.repository';
@@ -15,7 +15,8 @@ export async function transferTransaction(
 
   const { from, to, amount } = transferTransactionParams.parse(request.body);
 
-  const transactionsRepository = new TransactionsRepository();
+  let logger: FastifyLoggerInstance = request.log;
+  const transactionsRepository = new TransactionsRepository(logger);
   const transferTransactionService = new TransferTransactionService(
     transactionsRepository,
   );
