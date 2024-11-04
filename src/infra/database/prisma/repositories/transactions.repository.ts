@@ -1,4 +1,6 @@
+import { Prisma } from '@prisma/client';
 import { FastifyLoggerInstance } from 'fastify';
+import { Account } from '../../../../domain/entities/account';
 import { Transaction } from '../../../../domain/entities/transactions';
 import { TransactionTypeEnum } from '../../../../domain/enum/transaction-type.enum';
 import { ITransactionsRepository } from '../../../../domain/repositories/transactions.repository';
@@ -8,6 +10,10 @@ import { prisma } from '../index';
 
 export class TransactionsRepository implements ITransactionsRepository {
   private readonly logger: FastifyLoggerInstance;
+
+  constructor(logger: FastifyLoggerInstance) {
+    this.logger = logger;
+  }
 
   async deposit(number: number, amount: number): Promise<Transaction> {
     this.logger.info(`Initiating deposit: Account ${number}, Amount ${amount}`);
@@ -59,9 +65,9 @@ export class TransactionsRepository implements ITransactionsRepository {
     );
 
     const transaction = await prisma.$transaction(async (client) => {
-      const account = await client.account.findUnique({
-        where: { number },
-      });
+      const account = await client.$queryRaw<Account>(
+        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${number} FOR UPDATE`,
+      );
 
       if (!account) {
         this.logger.error(`Account not found for number ${number}`);
@@ -114,9 +120,9 @@ export class TransactionsRepository implements ITransactionsRepository {
     );
 
     const transaction = await prisma.$transaction(async (client) => {
-      const from = await client.account.findUnique({
-        where: { number: fromAccount },
-      });
+      const from = await client.$queryRaw<Account>(
+        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${fromAccount} FOR UPDATE`,
+      );
 
       if (!from) {
         this.logger.error(`Source account not found for number ${fromAccount}`);
@@ -128,9 +134,9 @@ export class TransactionsRepository implements ITransactionsRepository {
         throw new InsuficientFundsError();
       }
 
-      const to = await client.account.findUnique({
-        where: { number: toAccount },
-      });
+      const to = await client.$queryRaw<Account>(
+        Prisma.sql`SELECT * FROM "Account" WHERE "number" = ${toAccount} FOR UPDATE`,
+      );
 
       if (!to) {
         this.logger.error(
