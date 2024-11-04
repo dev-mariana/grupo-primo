@@ -68,3 +68,42 @@ Este projeto implementa um sistema básico de transações bancárias com funcio
    ```bash
    npm run dev ou yarn install
    ```
+
+## Testrando os Endpoints
+
+- Registrar conta:
+
+```json
+{
+  "number": 123,
+  "balance": 1000
+}
+```
+
+- Fazer deposito de uma conta já existente:
+
+```json
+{
+  "accountNumber": 123,
+  "amount": 100
+}
+```
+
+- Fazer saque de uma conta já existente:
+
+```json
+{
+  "accountNumber": 123,
+  "amount": 50
+}
+```
+
+- Fazer transferência entre duas contas:
+
+```json
+{
+  "fromAccount": 123,
+  "toAccount": 456,
+  "amount": 30
+}
+```
